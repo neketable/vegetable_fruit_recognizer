@@ -1,0 +1,38 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app : my-k8s-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: exam
+  template:
+    metadata:
+      labels:
+        project: exam 
+    spec:
+      containers:
+        - name : exam-web
+          image: nivanovqq/kuber-example:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-single-pod-service
+  labels:
+    owner: nivanov
+spec:
+  selector:
+    project: exam 
+  ports:
+    - name      : app-listener
+      protocol  : TCP
+      port      : 80  # Port on Load Balancer
+      targetPort: 80  # Port on POD
+  type: LoadBalancer
